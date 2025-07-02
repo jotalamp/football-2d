@@ -4,4 +4,4 @@
 
 ### Screenshots
 
-![Screenshot of football-2d app running](images/football-2d-01.png)
+![Screenshot of football-2d app running](assets/screenshots/football-2d-01.png)
