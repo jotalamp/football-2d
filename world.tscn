@@ -1,0 +1,326 @@
+[gd_scene load_steps=23 format=3 uid="uid://bvnsgj5dxtaka"]
+
+[ext_resource type="Script" uid="uid://dgq6580kmcxt1" path="res://world.gd" id="1_dwbse"]
+[ext_resource type="Texture2D" uid="uid://bqktx50h2folf" path="res://ball1.png" id="1_f3sb7"]
+[ext_resource type="Script" uid="uid://d3k2thaup7in5" path="res://ball.gd" id="2_gbfbk"]
+[ext_resource type="Script" uid="uid://dykg1vb0y6fam" path="res://goal.gd" id="2_ioo17"]
+[ext_resource type="Texture2D" uid="uid://fwq8id8ft8lo" path="res://assets/player/leg.png" id="4_036b0"]
+[ext_resource type="Texture2D" uid="uid://bocke0delobv7" path="res://assets/player/player2.png" id="5_036b0"]
+[ext_resource type="Texture2D" uid="uid://boiycguc5e7hh" path="res://assets/player/leg2.png" id="5_dwbse"]
+[ext_resource type="Texture2D" uid="uid://r7wlg8uoyf5x" path="res://assets/environment/goal_1.png" id="7_pkg7o"]
+[ext_resource type="Script" uid="uid://jbscjybiid6o" path="res://player.gd" id="7_wse8f"]
+[ext_resource type="Material" uid="uid://d0ifmvegey86f" path="res://assets/player/player_color.tres" id="8_ic0uy"]
+[ext_resource type="Script" uid="uid://0vxrth6ehmpr" path="res://scoreboard.gd" id="10_wse8f"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_f3sb7"]
+friction = 0.5
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f3sb7"]
+size = Vector2(1000, 20)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_wse8f"]
+
+[sub_resource type="Gradient" id="Gradient_ic0uy"]
+colors = PackedColorArray(0, 1, 0, 1, 0, 0.18, 0.00899999, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_fj7yv"]
+gradient = SubResource("Gradient_ic0uy")
+fill_to = Vector2(0, 1)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_fj7yv"]
+friction = 0.5
+bounce = 0.4
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_f3sb7"]
+radius = 31.0483
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_036b0"]
+radius = 44.0
+height = 450.0
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_036b0"]
+friction = 0.1
+bounce = 0.4
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gbfbk"]
+radius = 6.0
+height = 76.6506
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ioo17"]
+radius = 6.0
+height = 234.768
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_dwbse")
+
+[node name="Center" type="Node2D" parent="."]
+position = Vector2(480, 540)
+
+[node name="Ground" type="StaticBody2D" parent="Center"]
+physics_material_override = SubResource("PhysicsMaterial_f3sb7")
+
+[node name="GroundCollision" type="CollisionShape2D" parent="Center/Ground"]
+shape = SubResource("RectangleShape2D_f3sb7")
+
+[node name="GroundSprite" type="Sprite2D" parent="Center/Ground/GroundCollision"]
+material = SubResource("CanvasItemMaterial_wse8f")
+scale = Vector2(15, 0.3)
+texture = SubResource("GradientTexture2D_fj7yv")
+
+[node name="Ball" type="RigidBody2D" parent="Center" groups=["ball"]]
+unique_name_in_owner = true
+position = Vector2(0, -540)
+mass = 0.43
+physics_material_override = SubResource("PhysicsMaterial_fj7yv")
+continuous_cd = 2
+script = ExtResource("2_gbfbk")
+
+[node name="BallCollision" type="CollisionShape2D" parent="Center/Ball"]
+scale = Vector2(0.5, 0.5)
+shape = SubResource("CircleShape2D_f3sb7")
+
+[node name="BallSprite" type="Sprite2D" parent="Center/Ball"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_f3sb7")
+
+[node name="Timer" type="Timer" parent="Center/Ball"]
+unique_name_in_owner = true
+wait_time = 2.0
+one_shot = true
+
+[node name="Player01" type="RigidBody2D" parent="Center"]
+unique_name_in_owner = true
+position = Vector2(-302, -70)
+mass = 64.0
+physics_material_override = SubResource("PhysicsMaterial_fj7yv")
+center_of_mass_mode = 1
+center_of_mass = Vector2(6, 80)
+can_sleep = false
+continuous_cd = 2
+linear_damp = 0.1
+angular_damp = 0.9
+script = ExtResource("7_wse8f")
+player_id = 1
+
+[node name="Player01Collision" type="CollisionShape2D" parent="Center/Player01"]
+position = Vector2(-2, -18)
+scale = Vector2(0.25, 0.25)
+shape = SubResource("CapsuleShape2D_036b0")
+
+[node name="Player01Leg" type="RigidBody2D" parent="Center/Player01"]
+collision_layer = 3
+collision_mask = 3
+mass = 13.0
+physics_material_override = SubResource("PhysicsMaterial_036b0")
+center_of_mass_mode = 1
+center_of_mass = Vector2(0, 5)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Center/Player01/Player01Leg"]
+polygon = PackedVector2Array(-3, -1, 10, -2, 5, 44, 17, 52, -2, 53)
+
+[node name="LegJoint" type="PinJoint2D" parent="Center/Player01/Player01Leg"]
+unique_name_in_owner = true
+node_a = NodePath("../..")
+node_b = NodePath("..")
+bias = 0.5
+softness = 0.1
+angular_limit_enabled = true
+angular_limit_lower = -1.74533
+motor_enabled = true
+motor_target_velocity = -17.4533
+
+[node name="PlayerLegSprite" type="Sprite2D" parent="Center/Player01/Player01Leg"]
+position = Vector2(0, -10)
+scale = Vector2(2, 2)
+texture = ExtResource("4_036b0")
+
+[node name="Player01Leg2" type="RigidBody2D" parent="Center/Player01"]
+position = Vector2(-10, 20)
+collision_layer = 5
+collision_mask = 5
+mass = 13.0
+physics_material_override = SubResource("PhysicsMaterial_036b0")
+center_of_mass_mode = 1
+center_of_mass = Vector2(0, 5)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Center/Player01/Player01Leg2"]
+position = Vector2(-2, -20)
+polygon = PackedVector2Array(-2, 17, 8, 16, 5, 44, 17, 52, -2, 53)
+
+[node name="LegJoint2" type="PinJoint2D" parent="Center/Player01/Player01Leg2"]
+unique_name_in_owner = true
+node_a = NodePath("../..")
+node_b = NodePath("..")
+bias = 0.5
+softness = 0.1
+angular_limit_enabled = true
+angular_limit_upper = 2.26893
+motor_enabled = true
+motor_target_velocity = 0.174533
+
+[node name="PlayerLegSprite2" type="Sprite2D" parent="Center/Player01/Player01Leg2"]
+position = Vector2(0, -30)
+scale = Vector2(2, 2)
+texture = ExtResource("5_dwbse")
+
+[node name="PlayerBodySprite" type="Sprite2D" parent="Center/Player01"]
+position = Vector2(1, -10)
+scale = Vector2(2, 2)
+texture = ExtResource("5_036b0")
+
+[node name="Player02" type="RigidBody2D" parent="Center"]
+unique_name_in_owner = true
+position = Vector2(300, -70)
+rotation = 3.14159
+scale = Vector2(1, -1)
+mass = 64.0
+physics_material_override = SubResource("PhysicsMaterial_fj7yv")
+center_of_mass_mode = 1
+center_of_mass = Vector2(6, -80)
+can_sleep = false
+continuous_cd = 2
+linear_damp = 0.1
+angular_damp = 0.9
+script = ExtResource("7_wse8f")
+player_id = 2
+
+[node name="Player02Collision" type="CollisionShape2D" parent="Center/Player02"]
+position = Vector2(-2, -18)
+scale = Vector2(0.25, 0.25)
+shape = SubResource("CapsuleShape2D_036b0")
+
+[node name="Player02Leg" type="RigidBody2D" parent="Center/Player02"]
+collision_layer = 3
+collision_mask = 3
+mass = 13.0
+physics_material_override = SubResource("PhysicsMaterial_036b0")
+center_of_mass_mode = 1
+center_of_mass = Vector2(0, 5)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Center/Player02/Player02Leg"]
+polygon = PackedVector2Array(-3, -1, 10, -2, 5, 44, 17, 52, -2, 53)
+
+[node name="Leg2Joint" type="PinJoint2D" parent="Center/Player02/Player02Leg"]
+unique_name_in_owner = true
+node_a = NodePath("../..")
+node_b = NodePath("..")
+bias = 0.5
+softness = 0.1
+angular_limit_enabled = true
+angular_limit_upper = 1.74533
+motor_enabled = true
+motor_target_velocity = -0.174533
+
+[node name="Player2LegSprite" type="Sprite2D" parent="Center/Player02/Player02Leg"]
+material = ExtResource("8_ic0uy")
+position = Vector2(0, -10)
+scale = Vector2(2, 2)
+texture = ExtResource("4_036b0")
+
+[node name="Player01Leg2" type="RigidBody2D" parent="Center/Player02"]
+position = Vector2(-10, -20)
+collision_layer = 5
+collision_mask = 5
+mass = 13.0
+physics_material_override = SubResource("PhysicsMaterial_036b0")
+center_of_mass_mode = 1
+center_of_mass = Vector2(0, 5)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Center/Player02/Player01Leg2"]
+position = Vector2(-2, -20)
+polygon = PackedVector2Array(-2, 17, 8, 16, 5, 44, 17, 52, -2, 53)
+
+[node name="Leg2Joint2" type="PinJoint2D" parent="Center/Player02/Player01Leg2"]
+unique_name_in_owner = true
+node_a = NodePath("../..")
+node_b = NodePath("..")
+bias = 0.5
+softness = 0.1
+angular_limit_enabled = true
+angular_limit_lower = -2.26893
+motor_enabled = true
+motor_target_velocity = -5.23599
+
+[node name="Player2LegSprite2" type="Sprite2D" parent="Center/Player02/Player01Leg2"]
+material = ExtResource("8_ic0uy")
+position = Vector2(0, -30)
+scale = Vector2(2, 2)
+texture = ExtResource("5_dwbse")
+
+[node name="Player2BodySprite" type="Sprite2D" parent="Center/Player02"]
+texture_filter = 1
+texture_repeat = 1
+material = ExtResource("8_ic0uy")
+position = Vector2(1, -10)
+scale = Vector2(2, 2)
+texture = ExtResource("5_036b0")
+
+[node name="GoalB" type="StaticBody2D" parent="Center"]
+unique_name_in_owner = true
+position = Vector2(450, -130)
+script = ExtResource("2_ioo17")
+
+[node name="GoalBCollision" type="CollisionShape2D" parent="Center/GoalB"]
+position = Vector2(-31, -105)
+rotation = 1.84574
+shape = SubResource("CapsuleShape2D_gbfbk")
+
+[node name="GoalBCollision2" type="CollisionShape2D" parent="Center/GoalB"]
+position = Vector2(29, 10)
+rotation = -0.286366
+shape = SubResource("CapsuleShape2D_ioo17")
+
+[node name="Sprite2D" type="Sprite2D" parent="Center/GoalB"]
+z_index = 2
+texture = ExtResource("7_pkg7o")
+
+[node name="GoalArea" type="Area2D" parent="Center/GoalB"]
+
+[node name="GoalCollision" type="CollisionPolygon2D" parent="Center/GoalB/GoalArea"]
+polygon = PackedVector2Array(-40, -90, -25, -85, 30, 110, -40, 110)
+
+[node name="GoalA" type="StaticBody2D" parent="Center"]
+unique_name_in_owner = true
+position = Vector2(-450, -130)
+script = ExtResource("2_ioo17")
+home_team = false
+
+[node name="GoalACollision" type="CollisionShape2D" parent="Center/GoalA"]
+position = Vector2(31, -105)
+rotation = -1.84656
+shape = SubResource("CapsuleShape2D_gbfbk")
+
+[node name="GoalACollision2" type="CollisionShape2D" parent="Center/GoalA"]
+position = Vector2(-29, 10)
+rotation = 0.286234
+shape = SubResource("CapsuleShape2D_ioo17")
+
+[node name="Sprite2D" type="Sprite2D" parent="Center/GoalA"]
+z_index = 2
+texture = ExtResource("7_pkg7o")
+flip_h = true
+
+[node name="GoalArea" type="Area2D" parent="Center/GoalA"]
+
+[node name="GoalCollision" type="CollisionPolygon2D" parent="Center/GoalA/GoalArea"]
+polygon = PackedVector2Array(40, -90, 25, -85, -30, 110, 40, 110)
+
+[node name="Scoreboard" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("10_wse8f")
+
+[node name="ScoreText" type="RichTextLabel" parent="Scoreboard"]
+unique_name_in_owner = true
+offset_left = 448.0
+offset_top = 8.0
+offset_right = 616.0
+offset_bottom = 48.0
+text = "0 - 0"
+fit_content = true
+scroll_active = false
+
+[connection signal="timeout" from="Center/Ball/Timer" to="Center/Ball" method="_on_timer_timeout"]
+[connection signal="body_entered" from="Center/GoalB/GoalArea" to="Center/Ball" method="_on_goal_area_body_entered"]
+[connection signal="body_entered" from="Center/GoalB/GoalArea" to="Center/GoalB" method="_on_goal_area_body_entered"]
+[connection signal="body_entered" from="Center/GoalA/GoalArea" to="Center/Ball" method="_on_goal_area_body_entered"]
+[connection signal="body_entered" from="Center/GoalA/GoalArea" to="Center/GoalA" method="_on_goal_area_body_entered"]

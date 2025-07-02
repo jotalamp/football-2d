@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://d0ifmvegey86f"]
+
+[ext_resource type="Shader" uid="uid://dbdosoxw3c8k6" path="res://player_color.gdshader" id="1_4cgi8"]
+
+[resource]
+resource_local_to_scene = true
+resource_name = "Player color"
+shader = ExtResource("1_4cgi8")

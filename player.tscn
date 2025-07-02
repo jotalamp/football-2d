@@ -1,0 +1,93 @@
+[gd_scene load_steps=8 format=3 uid="uid://b2kat7iumm6ed"]
+
+[ext_resource type="Script" uid="uid://blrfqqjpquv7" path="res://player_02.gd" id="1_hqtel"]
+[ext_resource type="Texture2D" uid="uid://fwq8id8ft8lo" path="res://assets/player/leg.png" id="2_sweqy"]
+[ext_resource type="Texture2D" uid="uid://boiycguc5e7hh" path="res://assets/player/leg2.png" id="3_2hs0m"]
+[ext_resource type="Texture2D" uid="uid://bocke0delobv7" path="res://assets/player/player2.png" id="4_1jxqw"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_fj7yv"]
+friction = 0.5
+bounce = 0.4
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_036b0"]
+radius = 44.0
+height = 450.0
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_036b0"]
+friction = 0.1
+bounce = 0.4
+
+[node name="Player01" type="RigidBody2D"]
+mass = 64.0
+physics_material_override = SubResource("PhysicsMaterial_fj7yv")
+center_of_mass_mode = 1
+center_of_mass = Vector2(6, 70)
+continuous_cd = 2
+script = ExtResource("1_hqtel")
+player_id = 1
+
+[node name="Player01Collision" type="CollisionShape2D" parent="."]
+position = Vector2(-2, -18)
+scale = Vector2(0.25, 0.25)
+shape = SubResource("CapsuleShape2D_036b0")
+
+[node name="Player01Leg" type="RigidBody2D" parent="."]
+collision_layer = 2
+collision_mask = 3
+mass = 13.0
+physics_material_override = SubResource("PhysicsMaterial_036b0")
+center_of_mass_mode = 1
+center_of_mass = Vector2(0, 5)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Player01Leg"]
+polygon = PackedVector2Array(-3, -1, 10, -2, 5, 44, 17, 52, -2, 53)
+
+[node name="LegJoint" type="PinJoint2D" parent="Player01Leg"]
+unique_name_in_owner = true
+node_a = NodePath("../..")
+node_b = NodePath("..")
+bias = 0.5
+softness = 0.1
+angular_limit_enabled = true
+angular_limit_lower = -1.74533
+motor_enabled = true
+motor_target_velocity = -17.4533
+
+[node name="PlayerLegSprite" type="Sprite2D" parent="Player01Leg"]
+position = Vector2(0, -10)
+scale = Vector2(2, 2)
+texture = ExtResource("2_sweqy")
+
+[node name="Player01Leg2" type="RigidBody2D" parent="."]
+position = Vector2(-10, 20)
+collision_layer = 4
+collision_mask = 5
+mass = 13.0
+physics_material_override = SubResource("PhysicsMaterial_036b0")
+center_of_mass_mode = 1
+center_of_mass = Vector2(0, 5)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Player01Leg2"]
+position = Vector2(-2, -20)
+polygon = PackedVector2Array(-2, 17, 8, 16, 5, 44, 17, 52, -2, 53)
+
+[node name="LegJoint2" type="PinJoint2D" parent="Player01Leg2"]
+unique_name_in_owner = true
+node_a = NodePath("../..")
+node_b = NodePath("..")
+bias = 0.5
+softness = 0.1
+angular_limit_enabled = true
+angular_limit_upper = 2.26893
+motor_enabled = true
+motor_target_velocity = 5.23599
+
+[node name="PlayerLegSprite2" type="Sprite2D" parent="Player01Leg2"]
+position = Vector2(0, -30)
+scale = Vector2(2, 2)
+texture = ExtResource("3_2hs0m")
+
+[node name="PlayerBodySprite" type="Sprite2D" parent="."]
+position = Vector2(1, -10)
+scale = Vector2(2, 2)
+texture = ExtResource("4_1jxqw")
