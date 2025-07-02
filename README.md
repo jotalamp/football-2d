@@ -1,0 +1,7 @@
+# football-2d
+
+2D football game inspired by https://ottoojala.itch.io/soccer-physics
+
+### Screenshots
+
+![Screenshot of football-2d app running](images/football-2d-01.png)
